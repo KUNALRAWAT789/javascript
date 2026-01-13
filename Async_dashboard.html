@@ -22,7 +22,20 @@
 
 <div id="logs"></div>
 <script>
-    
+    //JS BASICS: variables,functions,scope
+    function runbasics(){
+        console.clear();
+        //variables + scope
+        let count = 0; //Block Scope
+        const max = 5; // Immutable
+
+        function increment(){
+            count++;
+            logToPage(`Basics: count = ${count}`);
+        }
+        increment();
+        logToPage(`Basics: Functions + Scope work!`);
+    }
 </script>
   </body>
   </html>
