@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "username": "johndoe",
+    "email": "john.doe@email.com",
+    "phone": "+1-555-0101",
+    "company": {
+      "name": "TechCorp",
+      "catchPhrase": "Innovation first"
+    },
+    "website": "johndoe.com"
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "username": "janesmith", 
+    "email": "jane.smith@email.com",
+    "phone": "+1-555-0202",
+    "company": {
+      "name": "CodeWorks",
+      "catchPhrase": "Build fast"
+    },
+    "website": "janesmith.com"
+  },
+  {
+    "id": 3,
+    "name": "Bob Johnson",
+    "username": "bobjohnson",
+    "email": "bob.johnson@email.com", 
+    "phone": "+1-555-0303",
+    "company": {
+      "name": "DataSync",
+      "catchPhrase": "Data everywhere"
+    },
+    "website": "bobjohnson.com"
+  },
+  {
+    "id": 4,
+    "name": "Alice Brown",
+    "username": "alicebrown",
+    "email": "alice.brown@email.com",
+    "phone": "+1-555-0404",
+    "company": {
+      "name": "WebFlow",
+      "catchPhrase": "Sites that scale"
+    },
+    "website": "alicebrown.com"
+  },
+  {
+    "id": 5,
+    "name": "Charlie Wilson",
+    "username": "charliewilson",
+    "email": "charlie.wilson@email.com",
+    "phone": "+1-555-0505",
+    "company": {
+      "name": "APIHub",
+      "catchPhrase": "Connect everything"
+    },
+    "website": "charliewilson.com"
+  }
+]
