@@ -1,126 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title> JS PRACTICE BASICS + ASYNC + ARCHITECTURE</title>
-      <style>
-    body { font-family: Arial; margin: 40px; }
-    button { padding: 10px 20px; margin: 5px; cursor: pointer; }
-    #logs { border: 1px solid #ccc; padding: 20px; height: 400px; overflow-y: scroll; background: #f9f9f9; }
-    .log { margin: 5px 0; padding: 5px; background: white; border-left: 4px solid blue; }
+  <meta charset="UTF-8">
+  <title>JS Practice: Basics + Async + Architecture</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    button { padding: 8px 16px; margin: 4px; cursor: pointer; }
+    #logs { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; background: #f9f9f9; margin-top: 10px; }
+    .log { margin: 4px 0; padding: 4px 6px; background: #fff; border-left: 4px solid #007bff; font-size: 14px; }
   </style>
-  </head>
-  <body>
-<h1> PRACTICE DASHBOARD</h1>
-<div>
-<button onclick="runbasics()">1. JS Basics</button>
-<button onclick="runStack()">2. Call Stack</button>
-<button onclick="runAsync()">3. Async Order</button>
-<button onclick="runMicrotasks()">4. Microtasks</button>
-<button onclick="fetchUsers()">5. Real Async + DOM</button>
-<button onclick="clearLogs()">6. CLEAR</button>
-<button onclick="runAsync(),runMicrotasks()">7. Priority</button>
-</div>
+</head>
+<body>
+  <h1>JS Practice Dashboard</h1>
 
-<div id="logs"></div>
-<script>
-    //JS BASICS: variables,functions,scope
-    function runbasics(){
-        console.clear();
-        //variables + scope
-        let count = 0; //Block Scope
-        const max = 5; // Immutable
+  <!-- Existing practice buttons -->
+  <div>
+    <button onclick="runBasics()">JS Basics</button>
+    <button onclick="runStack()">Call Stack</button>
+    <button onclick="runAsync()">Async (setTimeout)</button>
+    <button onclick="runMicrotasks()">Microtasks (Promise)</button>
 
-        function increment(){
-            count++;
-            logToPage(`Basics: count = ${count}`);
-        }
-        increment();
-        logToPage(`Basics: Functions + Scope work!`);
+    <!-- NEW button: loads users from Express /api/users -->
+    <button onclick="fetchUsers()">Load API Users</button>
+
+    <button onclick="clearLogs()">Clear Logs</button>
+  </div>
+
+  <div id="logs"></div>
+
+  <script>
+    // ---------- LOG HELPER ----------
+    function logToPage(message) {
+      const logsDiv = document.getElementById('logs');
+      const logDiv = document.createElement('div');
+      logDiv.className = 'log';
+      logDiv.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+      logsDiv.appendChild(logDiv);
+      logsDiv.scrollTop = logsDiv.scrollHeight;
     }
 
-    // CALL STACK : Sync execution order
-     function runStack(){
-        logToPage('Stack start');
-        function level1(){
-            logToPage('Level 1');
-            level2();
-            logToPage('level 1 End');
-        }
-   
-        function level2(){
-            logToPage('level 2');
-            level3();
-            logToPage('level 2 End');
-        }
+    function clearLogs() {
+      document.getElementById('logs').innerHTML = '';
+    }
 
-        function level3(){
-            logToPage('level3');
-        } 
-        
-        level1(); //LIFO     //start->level1->level2->level3->level2_end->level1_end.
-     }
+    // ---------- JS BASICS ----------
+    function runBasics() {
+      clearLogs();
+      logToPage('JS Basics: start');
 
-     //ASYNC : setTimeout macrotasks
-     function runAsync(){
-        logToPage('Async Start');
-        logToPage('1. Sync script');
+      let x = 10;
+      const y = 5;
 
-        setTimeout(()=>logToPage('3.Timeout 0ms'),0); //goes to webapis and is executed after 0ms basically right after the stack is empty.
-        setTimeout(()=>logToPage('4. Timeout 100ms'),100);//goes to webapis after 3 and is executed 100ms after being loaded in the call stack.
-
-        logToPage('2. Sync end');
-     }
-
-
-     // PROMISES: Microtasks queue (higher priority)
-      function runMicrotasks(){
-        logToPage('Microtasks Start');
-        logToPage('1. Sync');
-
-        setTimeout(()=>logToPage('5. Microtask'), 0);
-        Promise.resolve().then(()=>logToPage('3. Microtask 1'));
-        Promise.resolve().then(()=>logToPage('4. Microtask 2'));
-
-        logToPage('2. Sync end');
+      function add(a, b) {
+        return a + b;
       }
-  // FULL ASYNC + DOM + FETCH
-  async function fetchUsers(){
-    const btn = event.target;
-    btn.textContent = 'Loading...';
-    btn.disable = true;
 
-    logToPage('Fetching Users.....');
-    try{
-        const response = await fetch('./users.json');
+      const result = add(x, y);
+      logToPage(`x = ${x}, y = ${y}, x + y = ${result}`);
+
+      logToPage('JS Basics: end');
+    }
+
+    // ---------- CALL STACK DEMO ----------
+    function runStack() {
+      clearLogs();
+      logToPage('Call Stack: start');
+
+      function level1() {
+        logToPage('In level1');
+        level2();
+        logToPage('Back in level1');
+      }
+
+      function level2() {
+        logToPage('In level2');
+        level3();
+        logToPage('Back in level2');
+      }
+
+      function level3() {
+        logToPage('In level3');
+      }
+
+      level1();
+      logToPage('Call Stack: end');
+    }
+
+    // ---------- ASYNC (setTimeout) ----------
+    function runAsync() {
+      clearLogs();
+      logToPage('Async demo: start');
+
+      logToPage('1. Sync log before setTimeout');
+
+      setTimeout(() => {
+        logToPage('3. setTimeout callback (0 ms)');
+      }, 0);
+
+      logToPage('2. Sync log after setTimeout');
+      logToPage('Async demo: end');
+    }
+
+    // ---------- MICROTASKS (PROMISE) ----------
+    function runMicrotasks() {
+      clearLogs();
+      logToPage('Microtask demo: start');
+
+      logToPage('1. Sync start');
+
+      setTimeout(() => {
+        logToPage('5. Macrotask (setTimeout)');
+      }, 0);
+
+      Promise.resolve().then(() => {
+        logToPage('3. Microtask 1 (Promise.then)');
+      });
+
+      Promise.resolve().then(() => {
+        logToPage('4. Microtask 2 (Promise.then)');
+      });
+
+      logToPage('2. Sync end');
+      logToPage('Microtask demo: end');
+    }
+
+    // ---------- NEW: LOAD USERS FROM EXPRESS /api/users ----------
+    async function fetchUsers() {
+      clearLogs();
+      logToPage('Fetching users from /api/users ...');
+
+      const btn = event.target;
+      const originalText = btn.textContent;
+      btn.textContent = 'Loading...';
+      btn.disabled = true;
+
+      try {
+        // This hits your Express route: app.get('/api/users', ...)
+        const response = await fetch('/api/users');
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status);
+        }
+
         const users = await response.json();
-        logToPage(`GOT ${users.length} users`);
-        users.forEach(user => {
-           logToPage(`${user.name} (${user.email}) - ${user.company.name}`);
-        }); 
-    }
-    catch(error){
-      logToPage(`Error : ${error.message}`);
-    }
-    finally{
-btn.textContent = 'fetchusers';
-btn.disable = false;
-    }
-  }
-//HELPER: DOM log (uses the 5 methods!)
-function logToPage(message){
-  const logsDiv = document.getElementById('logs'); //creates a variable for the scrollable log div
-  const logDiv = document.createElement('div'); // creates another empty div
-  logDiv.className='log'; //gives class to the empty div for css
-  logDiv.textContent = `${new Date().toLocaleTimeString()}: ${message}`;//adds text to the enmpy div
-  logsDiv.appendChild(logDiv);//adds the empty div as a child to the scrollable div
-  logsDiv.scrollTop = logsDiv.scrollHeight;// auto scrolls to the latest entry
-}
+        logToPage(`✅ Received ${users.length} users from API`);
 
-function clearLogs(){
-  document.getElementById('logs').innerHTML='';
-}
-
-
-</script>
-  </body>
-  </html>
+        users.forEach(u => {
+          logToPage(`👤 ${u.name} (${u.email || 'no email field'})`);
+        });
+      } catch (err) {
+        logToPage('❌ Error fetching users: ' + err.message);
+      } finally {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
