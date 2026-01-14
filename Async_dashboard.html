@@ -13,11 +13,12 @@
 <h1> PRACTICE DASHBOARD</h1>
 <div>
 <button onclick="runbasics()">1. JS Basics</button>
-<button onclick="runbasics()">2. Call Stack</button>
-<button onclick="runbasics()">3. Async Order</button>
-<button onclick="runbasics()">4. Microtasks</button>
-<button onclick="runbasics()">5. Real Async + DOM</button>
-<button onclick="runbasics()">6. CLEAR</button>
+<button onclick="runStack()">2. Call Stack</button>
+<button onclick="runAsync()">3. Async Order</button>
+<button onclick="runMicrotasks()">4. Microtasks</button>
+<button onclick="fetchUsers()">5. Real Async + DOM</button>
+<button onclick="clearLogs()">6. CLEAR</button>
+<button onclick="runAsync(),runMicrotasks()">7. Priority</button>
 </div>
 
 <div id="logs"></div>
@@ -36,6 +37,90 @@
         increment();
         logToPage(`Basics: Functions + Scope work!`);
     }
+
+    // CALL STACK : Sync execution order
+     function runStack(){
+        logToPage('Stack start');
+        function level1(){
+            logToPage('Level 1');
+            level2();
+            logToPage('level 1 End');
+        }
+   
+        function level2(){
+            logToPage('level 2');
+            level3();
+            logToPage('level 2 End');
+        }
+
+        function level3(){
+            logToPage('level3');
+        } 
+        
+        level1(); //LIFO     //start->level1->level2->level3->level2_end->level1_end.
+     }
+
+     //ASYNC : setTimeout macrotasks
+     function runAsync(){
+        logToPage('Async Start');
+        logToPage('1. Sync script');
+
+        setTimeout(()=>logToPage('3.Timeout 0ms'),0); //goes to webapis and is executed after 0ms basically right after the stack is empty.
+        setTimeout(()=>logToPage('4. Timeout 100ms'),100);//goes to webapis after 3 and is executed 100ms after being loaded in the call stack.
+
+        logToPage('2. Sync end');
+     }
+
+
+     // PROMISES: Microtasks queue (higher priority)
+      function runMicrotasks(){
+        logToPage('Microtasks Start');
+        logToPage('1. Sync');
+
+        setTimeout(()=>logToPage('5. Microtask'), 0);
+        Promise.resolve().then(()=>logToPage('3. Microtask 1'));
+        Promise.resolve().then(()=>logToPage('4. Microtask 2'));
+
+        logToPage('2. Sync end');
+      }
+  // FULL ASYNC + DOM + FETCH
+  async function fetchUsers(){
+    const btn = event.target;
+    btn.textContent = 'Loading...';
+    btn.disable = true;
+
+    logToPage('Fetching Users.....');
+    try{
+        const response = await fetch('./users.json');
+        const users = await response.json();
+        logToPage(`GOT ${users.length} users`);
+        users.forEach(user => {
+           logToPage(`${user.name} (${user.email}) - ${user.company.name}`);
+        }); 
+    }
+    catch(error){
+      logToPage(`Error : ${error.message}`);
+    }
+    finally{
+btn.textContent = 'fetchusers';
+btn.disable = false;
+    }
+  }
+//HELPER: DOM log (uses the 5 methods!)
+function logToPage(message){
+  const logsDiv = document.getElementById('logs'); //creates a variable for the scrollable log div
+  const logDiv = document.createElement('div'); // creates another empty div
+  logDiv.className='log'; //gives class to the empty div for css
+  logDiv.textContent = `${new Date().toLocaleTimeString()}: ${message}`;//adds text to the enmpy div
+  logsDiv.appendChild(logDiv);//adds the empty div as a child to the scrollable div
+  logsDiv.scrollTop = logsDiv.scrollHeight;// auto scrolls to the latest entry
+}
+
+function clearLogs(){
+  document.getElementById('logs').innerHTML='';
+}
+
+
 </script>
   </body>
   </html>
